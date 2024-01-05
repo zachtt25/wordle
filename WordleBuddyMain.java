@@ -5,6 +5,6 @@ public class WordleBuddyMain {
         int guessesUsed = wb.getGuessesUsed();
         wb.getGuesses(guessesUsed);
         wb.getColorOfGuess();
-        wb.runBuddy();
+        wb.returnGuessScore(guessesUsed);
    }
 }
