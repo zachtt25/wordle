@@ -61,41 +61,54 @@ public class WordleBuddy {
             System.out.println("What was your guess #" + i);
             guesses.add(scan.nextLine());
         }
+        System.out.println(guesses);
     }
+
+    ArrayList<String> colors = new ArrayList<>();
     public void getColorOfGuess() {
-        ArrayList<String> colors = new ArrayList<>();
         for (int i = 0; i <= guesses.size(); i++) {
-            for (int j = 0; i <= 4; i++) {
+            for (int j = 0; j <= 4; j++) {
                 Scanner scan = new Scanner(System.in);
-                System.out.println("'" + guesses.get(i) + "'" + " was your first guess; What color was the letter" + "'" + (guesses.get(i)).substring(j, j+1) +"'? ('green', 'yellow', 'grey')");
+                System.out.println("'" + guesses.get(i) + "'" + " was your guess #" + (i + 1) +"; What color was the letter " + "'" + (guesses.get(i)).substring(j, j+1) +"'? ('green', 'yellow', 'grey')");
                 colors.add(scan.nextLine());
             }
         }
+        System.out.println(colors);
     }
 
-    public String returnGuessScore(int guessNumber) {
+    public void returnGuessScore(int guessNumber) {
         int x = possibleAnswers.size();
         ArrayList<String> newPossibleAnswers = new ArrayList<>();
-        for (int i = 0; i <= x; i++) {
-            
+        for (int i = 1; i <= guessNumber + 1; i++) { //each guess
+            for (int j = 0; j <= 4; i++) { //each 5 set of colors for that guess
+                for (int k = 0; k <= x; j++){ //goes through each word from possible guesses
+                    if (colors.get(j * i).equals("grey")) {
+                        if (newPossibleAnswers.get(k).contains(colors.get(j * i))) {
+                            newPossibleAnswers.remove(k);
+                        }
+                    }
+                    if (colors.get(j * i).equals("yellow")) {
+                        if (!(newPossibleAnswers.get(k).contains(colors.get(j * i)))) {
+                            newPossibleAnswers.remove(k);
+                        }
+                    }
+                    if (colors.get(j * i).equals("green")) {
+                        if (!(newPossibleAnswers.get(k).substring(j, j+1).equals(guesses.get(i - 1).substring(j, j+1))))
+                            newPossibleAnswers.remove(k);
+                    }
+                }
+            }
+            int y = possibleAnswers.size() - newPossibleAnswers.size();
+            double z = y / possibleAnswers.size();
+            ArrayList<String> possibleAnswers = newPossibleAnswers;
+            System.out.println("This guess: " + guesses.get(i - 1) + " got a score of " + z + "! You eleminated " + y + " out of " + x + " possible answers");
         }
-        int y = possibleAnswers.size() - newPossibleAnswers.size();
-        double z = y / possibleAnswers.size();
-        ArrayList<String> possibleAnswers = newPossibleAnswers;
-        return "This guess got a score of " + z + "! You eleminated " + y + " out of " + x + " possible answers";
     }
+
 
     public void runBuddy() {
         for (int i = 1; i <= getGuessesUsed(); i++) {
             returnGuessScore(i);
         }
     }
-
-    public static void main(String[] args) {
-        WordleBuddy wb = new WordleBuddy();
-        wb.setUp();
-        int guessesUsed = wb.getGuessesUsed();
-        wb.getGuesses(guessesUsed);
-        wb.runBuddy();
-   }
 }
